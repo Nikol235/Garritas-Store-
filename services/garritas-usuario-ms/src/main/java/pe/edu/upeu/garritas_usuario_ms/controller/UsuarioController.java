@@ -1,0 +1,55 @@
+package pe.edu.upeu.garritas.usuario.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pe.edu.upeu.garritas.usuario.dto.UsuarioRequest;
+import pe.edu.upeu.garritas.usuario.dto.UsuarioResponse;
+import pe.edu.upeu.garritas.usuario.service.UsuarioService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/usuarios")
+@RequiredArgsConstructor
+@Tag(name = "Usuarios", description = "Gestion de clientes y administradores de Garritas Store")
+public class UsuarioController {
+
+    private final UsuarioService usuarioService;
+
+    @GetMapping
+    @Operation(summary = "Listar todos los usuarios")
+    public ResponseEntity<List<UsuarioResponse>> listar() {
+        return ResponseEntity.ok(usuarioService.listarTodos());
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Buscar usuario por ID")
+    public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioService.buscarPorId(id));
+    }
+
+    @PostMapping
+    @Operation(summary = "Registrar nuevo usuario")
+    public ResponseEntity<UsuarioResponse> crear(@Valid @RequestBody UsuarioRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crear(request));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar usuario")
+    public ResponseEntity<UsuarioResponse> actualizar(@PathVariable Long id,
+            @Valid @RequestBody UsuarioRequest request) {
+        return ResponseEntity.ok(usuarioService.actualizar(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar usuario")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        usuarioService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+}
