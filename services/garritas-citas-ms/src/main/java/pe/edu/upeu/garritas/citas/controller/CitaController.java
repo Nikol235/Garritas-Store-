@@ -1,0 +1,46 @@
+package pe.edu.upeu.garritas.citas.controller;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pe.edu.upeu.garritas.citas.dto.CitaRequest;
+import pe.edu.upeu.garritas.citas.entity.Cita;
+import pe.edu.upeu.garritas.citas.service.CitaService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/citas")
+@RequiredArgsConstructor
+public class CitaController {
+
+    private final CitaService service;
+
+    @PostMapping
+    public ResponseEntity<Cita> crear(@Valid @RequestBody CitaRequest req) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.crear(req));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Cita>> listar() {
+        return ResponseEntity.ok(service.listar());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Cita> obtener(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtener(id));
+    }
+
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<Cita> actualizarEstado(@PathVariable Long id, @RequestParam String estado) {
+        return ResponseEntity.ok(service.actualizarEstado(id, estado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+}
