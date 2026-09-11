@@ -19,10 +19,6 @@ spring:
               uri: lb://GARRITAS-ENVIO-MS
               predicates:
                 - Path=/api/v1/envios/**
-            - id: garritas-saludo-envios
-              uri: lb://GARRITAS-ENVIO-MS
-              predicates:
-                - Path=/saludo-envios
 
 eureka:
   instance:
